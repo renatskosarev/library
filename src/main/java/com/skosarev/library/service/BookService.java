@@ -63,4 +63,8 @@ public class BookService {
         Person person = personRepository.findById(newPerson.getId()).orElse(null);
         bookRepository.assign(id, person);
     }
+
+    public List<Book> searchByTitle(String text) {
+        return bookRepository.findByTitleContaining(text);
+    }
 }
