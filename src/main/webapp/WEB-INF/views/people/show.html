@@ -11,11 +11,11 @@
 <h1>Person</h1>
 <p th:text="${person.fullName} + ', ' + ${person.yearOfBirth}">Person info</p>
 
-<p th:if="${books.isEmpty()}">The person has not yet taken a single book</p>
-<div th:unless="${books.isEmpty()}">
+<p th:if="${person.getBooks().isEmpty()}">The person has not yet taken a single book</p>
+<div th:unless="${person.getBooks().isEmpty()}">
     <hr>
     <p><b>Books:</b></p>
-    <div th:each="book : ${books}">
+    <div th:each="book : ${person.books}">
         <a th:href="@{/books/{id}(id=${book.id})}"
            th:text="${book.title} + ', ' + ${book.author} + ', ' + ${book.year}"></a>
     </div>

@@ -1,24 +1,36 @@
 package com.skosarev.library.model;
 
+import javax.persistence.*;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Entity
+@Table(name = "book")
 public class Book {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int ownerId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private Person person;
 
+    @Column(name = "title")
     @NotEmpty(message = "Book title should not be empty")
     @Size(min = 1, max = 100, message = "Book title should be between 1 and 100 characters")
     private String title;
 
+    @Column(name = "author")
     @NotEmpty(message = "Book author should not be empty")
     @Size(min = 5, max = 100, message = "Book author should be between 5 and 100 characters")
     private String author;
 
+    @Column(name = "year")
     @NotNull(message = "Book year should not be empty")
     @Min(value = 1500, message = "Year should be greater than 1500")
     private int year;
@@ -26,9 +38,8 @@ public class Book {
     public Book() {
     }
 
-    public Book(int id, int ownerId, String title, String author, int year) {
-        this.id = id;
-        this.ownerId = ownerId;
+    public Book(Person person, String title, String author, int year) {
+        this.person = person;
         this.title = title;
         this.author = author;
         this.year = year;
@@ -42,12 +53,12 @@ public class Book {
         this.id = id;
     }
 
-    public int getOwnerId() {
-        return ownerId;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setOwnerId(int ownerId) {
-        this.ownerId = ownerId;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public String getTitle() {
@@ -72,16 +83,5 @@ public class Book {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", ownerId=" + ownerId +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", year=" + year +
-                '}';
     }
 }
