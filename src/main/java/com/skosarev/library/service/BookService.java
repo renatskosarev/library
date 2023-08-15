@@ -3,13 +3,13 @@ package com.skosarev.library.service;
 import com.skosarev.library.model.Book;
 import com.skosarev.library.model.Person;
 import com.skosarev.library.repository.BookRepository;
-import com.skosarev.library.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -17,12 +17,10 @@ import java.util.List;
 public class BookService {
     private static final int BOOKS_PER_PAGE = 5;
     private final BookRepository bookRepository;
-    private final PersonRepository personRepository;
 
     @Autowired
-    public BookService(BookRepository bookRepository, PersonRepository personRepository) {
+    public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
-        this.personRepository = personRepository;
     }
 
     public List<Book> getAllByPage(int page, Sort sort) {
@@ -55,13 +53,16 @@ public class BookService {
 
     @Transactional
     public void release(int id) {
-        bookRepository.release(id);
+        Book book = bookRepository.findById(id).get();
+        book.setPerson(null);
+        book.setTakenAt(null);
     }
 
     @Transactional
-    public void setPerson(int id, Person newPerson) {
-        Person person = personRepository.findById(newPerson.getId()).orElse(null);
-        bookRepository.assign(id, person);
+    public void assign(int id, Person person) {
+        Book book = bookRepository.findById(id).get();
+        book.setPerson(person);
+        book.setTakenAt(new Date());
     }
 
     public List<Book> searchByTitle(String text) {

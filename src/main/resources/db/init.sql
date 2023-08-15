@@ -14,6 +14,6 @@ CREATE TABLE book
     owner_id INT                      REFERENCES person (id) ON DELETE SET NULL,
     title    VARCHAR(100)             NOT NULL,
     author   VARCHAR(100)             NOT NULL,
-    year     INT CHECK (year >= 1500) NOT NULL
+    year     INT CHECK (year >= 1500) NOT NULL,
+    taken_at TIMESTAMP
 );
-

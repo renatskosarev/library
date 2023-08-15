@@ -109,7 +109,7 @@ public class BookController {
     @PatchMapping("/{id}/assign")
     public String assign(@PathVariable int id, @RequestParam("owner") int personId) {
         Person person = personService.get(personId);
-        bookService.setPerson(id, person);
+        bookService.assign(id, person);
         return "redirect:/books/{id}";
     }
 
