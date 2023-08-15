@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<a href="/books">Return to list</a>
+<a href="/books?page=0">Return to list</a>
 <h1>Book</h1>
 <p th:text="${book.title} + ', ' + ${book.author} + ', ' + ${book.year}">Book info</p>
 
@@ -17,11 +17,9 @@
     </form>
 </div>
 <div th:if="${people}">
-    <span>Эта книга свободна. Кому назначить ее?</span>
-
-
+    <span>This book is available. Who to give it to?</span>
     <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">
-        <label for="person">Выберите человека</label>
+        <label for="person">Select person</label>
         <select id="person" th:name="owner">
             <option th:each="person : ${people}" th:value="${person.getId()}"
                     th:text="${person.getFullName()}"></option>

@@ -5,6 +5,7 @@ import com.skosarev.library.model.Person;
 import com.skosarev.library.service.BookService;
 import com.skosarev.library.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,8 +26,32 @@ public class BookController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("books", bookService.getAll());
+    public String index(Model model,
+                        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+                        @RequestParam(value = "sort", required = false, defaultValue = "default") String selectedSort) {
+
+        Sort sort;
+        switch (selectedSort) {
+            case "title": {
+                sort = Sort.by("title");
+                break;
+            }
+            case "author": {
+                sort = Sort.by("author");
+                break;
+            }
+            case "year": {
+                sort = Sort.by("year");
+                break;
+            }
+            default:
+                sort = Sort.unsorted();
+        }
+
+        model.addAttribute("sort", selectedSort);
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", bookService.getTotalPages());
+        model.addAttribute("books", bookService.getAllByPage(page, sort));
 
         return "/books/index";
     }

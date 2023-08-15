@@ -5,6 +5,8 @@ import com.skosarev.library.model.Person;
 import com.skosarev.library.repository.BookRepository;
 import com.skosarev.library.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 public class BookService {
+    private static final int BOOKS_PER_PAGE = 5;
     private final BookRepository bookRepository;
     private final PersonRepository personRepository;
 
@@ -22,8 +25,12 @@ public class BookService {
         this.personRepository = personRepository;
     }
 
-    public List<Book> getAll() {
-        return bookRepository.findAll();
+    public List<Book> getAllByPage(int page, Sort sort) {
+        return bookRepository.findAll(PageRequest.of(page, BOOKS_PER_PAGE, sort)).getContent();
+    }
+
+    public int getTotalPages() {
+        return bookRepository.findAll(PageRequest.of(1, BOOKS_PER_PAGE)).getTotalPages();
     }
 
     public Book get(int id) {
